@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>要不要考研？· 决策心理测试</title>
+<style>
+  :root{
+    --bg:#f7f4ef;
+    --paper:#ffffff;
+    --ink:#22201d;
+    --ink2:#5b564f;
+    --ink3:#8f887e;
+    --line:#e6e0d6;
+    --accent:#b5522f;
+    --accent-soft:#f3e6e0;
+    --green:#3c6b5c;
+    --gold:#a8823c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px 100px}
+
+  /* header */
+  header{
+    padding:64px 0 40px;
+    text-align:center;
+    border-bottom:1px solid var(--line);
+  }
+  .kicker{
+    font-size:12px;letter-spacing:.22em;color:var(--accent);
+    text-transform:uppercase;margin-bottom:18px;font-weight:600;
+  }
+  h1{
+    font-family:"Songti SC","STSong","SimSun",serif;
+    font-size:36px;line-height:1.35;font-weight:700;letter-spacing:.02em;
+  }
+  h1 .q{color:var(--accent)}
+  .sub{margin-top:16px;color:var(--ink2);font-size:15px}
+  .meta{
+    margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
+  }
+  .meta span{
+    font-size:12.5px;color:var(--ink2);background:var(--paper);
+    border:1px solid var(--line);border-radius:100px;padding:4px 14px;
+  }
+
+  /* intro */
+  .intro{
+    background:var(--paper);border:1px solid var(--line);border-radius:14px;
+    padding:26px 28px;margin:36px 0 44px;
+  }
+  .intro h3{font-size:14px;letter-spacing:.08em;color:var(--ink3);font-weight:600;margin-bottom:14px}
+  .intro ol{padding-left:0;list-style:none;counter-reset:i}
+  .intro li{
+    position:relative;padding-left:26px;margin-bottom:10px;font-size:14.5px;color:var(--ink2);
+  }
+  .intro li:before{
+    counter-increment:i;content:counter(i);
+    position:absolute;left:0;top:3px;width:18px;height:18px;
+    background:var(--accent-soft);color:var(--accent);
+    border-radius:50%;font-size:11px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* progress */
+  .progress-bar{
+    position:sticky;top:0;z-index:50;
+    background:rgba(247,244,239,.94);
+    backdrop-filter:blur(8px);
+    padding:12px 0 10px;
+    border-bottom:1px solid var(--line);
+    display:none;
+  }
+  .progress-bar.on{display:block}
+  .pb-inner{max-width:760px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:14px}
+  .pb-track{flex:1;height:4px;background:#e6e0d6;border-radius:4px;overflow:hidden}
+  .pb-fill{height:100%;width:0;background:var(--accent);border-radius:4px;transition:width .3s ease}
+  .pb-num{font-size:12.5px;color:var(--ink3);font-variant-numeric:tabular-nums;min-width:52px;text-align:right}
+
+  /* questions */
+  .sec-title{
+    display:flex;align-items:center;gap:12px;
+    margin:44px 0 22px;font-size:13px;letter-spacing:.18em;color:var(--ink3);font-weight:600;
+  }
+  .sec-title:after{content:"";flex:1;height:1px;background:var(--line)}
+
+  .q{
+    background:var(--paper);border:1px solid var(--line);border-radius:14px;
+    padding:24px 26px;margin-bottom:14px;transition:border-color .25s;
+  }
+  .q.done{border-color:#d9cbb8}
+  .q-head{display:flex;gap:12px;margin-bottom:16px}
+  .q-no{
+    flex:none;width:26px;height:26px;border-radius:8px;
+    background:#f1ece3;color:var(--ink2);
+    font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;
+    font-variant-numeric:tabular-nums;margin-top:2px;
+  }
+  .q.done .q-no{background:var(--accent);color:#fff}
+  .q-text{font-size:16px;font-weight:600;line-height:1.6;letter-spacing:.01em}
+
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opt{
+    display:flex;align-items:flex-start;gap:11px;
+    padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    cursor:pointer;transition:all .18s;background:#fdfcfa;
+  }
+  .opt:hover{border-color:#cfc4b3;background:#faf7f1}
+  .opt input{display:none}
+  .dot{
+    flex:none;width:17px;height:17px;border-radius:50%;
+    border:1.5px solid #c9c1b4;margin-top:2px;position:relative;transition:all .18s;
+  }
+  .dot:after{
+    content:"";position:absolute;inset:3px;border-radius:50%;background:#fff;
+    transform:scale(0);transition:transform .18s;
+  }
+  .opt input:checked ~ .dot{border-color:var(--accent);background:var(--accent)}
+  .opt input:checked ~ .dot:after{transform:scale(1)}
+  .opt .letter{font-size:12.5px;color:var(--ink3);font-weight:700;flex:none;margin-top:1px;width:14px}
+  .opt .txt{font-size:14.5px;color:var(--ink2);line-height:1.6}
+  .opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+  .opt:has(input:checked) .txt{color:var(--ink)}
+  .opt:has(input:checked) .letter{color:var(--accent)}
+
+  /* submit */
+  .actions{margin-top:36px;text-align:center}
+  .btn{
+    display:inline-block;background:var(--ink);color:#fff;border:none;
+    padding:15px 52px;border-radius:100px;font-size:15.5px;font-weight:600;
+    letter-spacing:.06em;cursor:pointer;transition:all .2s;
+    font-family:inherit;
+  }
+  .btn:hover{background:var(--accent);transform:translateY(-1px)}
+  .btn:disabled{background:#c9c1b4;cursor:not-allowed;transform:none}
+  .hint{margin-top:14px;font-size:12.5px;color:var(--ink3)}
+
+  /* result */
+  #result{display:none;padding-top:20px}
+  .res-card{
+    background:var(--paper);border:1px solid var(--line);border-radius:18px;
+    overflow:hidden;margin-bottom:22px;
+  }
+  .res-top{padding:38px 34px 30px;border-bottom:1px solid var(--line);background:#fdfaf5}
+  .res-label{font-size:12px;letter-spacing:.2em;color:var(--gold);font-weight:600;margin-bottom:14px}
+  .res-name{
+    font-family:"Songti SC","STSong","SimSun",serif;
+    font-size:40px;font-weight:700;line-height:1.3;letter-spacing:.02em;
+  }
+  .res-tag{margin-top:10px;font-size:17px;color:var(--accent);letter-spacing:.02em}
+  .res-score{
+    margin-top:18px;display:inline-flex;align-items:baseline;gap:6px;
+    font-size:13px;color:var(--ink3);
+  }
+  .res-score b{font-size:26px;color:var(--ink);font-family:"Songti SC",serif}
+
+  .res-body{padding:30px 34px 34px}
+  .blk{margin-bottom:28px}
+  .blk:last-child{margin-bottom:0}
+  .blk-h{
+    font-size:12px;letter-spacing:.16em;color:var(--ink3);font-weight:600;
+    margin-bottom:14px;display:flex;align-items:center;gap:9px;
+  }
+  .blk-h:before{content:"";width:14px;height:2px;background:var(--accent);border-radius:2px}
+  .blk p{font-size:15px;color:var(--ink2);margin-bottom:12px}
+  .blk p:last-child{margin-bottom:0}
+  .blk p strong{color:var(--ink);font-weight:600}
+
+  .quote{
+    border-left:3px solid var(--accent);padding:6px 0 6px 16px;
+    font-size:14.5px;color:var(--ink2);font-style:normal;
+    background:linear-gradient(90deg,#faf7f1,transparent);
+    border-radius:0 8px 8px 0;padding-right:12px;
+  }
+  .quote span{display:block;margin-bottom:6px}
+  .quote span:last-child{margin-bottom:0}
+
+  .advice{list-style:none;counter-reset:a}
+  .advice li{
+    position:relative;padding-left:30px;margin-bottom:16px;font-size:15px;color:var(--ink2);
+  }
+  .advice li:before{
+    counter-increment:a;content:counter(a);
+    position:absolute;left:0;top:2px;width:20px;height:20px;border-radius:50%;
+    background:var(--accent-soft);color:var(--accent);
+    font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  }
+  .advice li strong{color:var(--ink);font-weight:600}
+
+  /* dims */
+  .dims{display:flex;flex-direction:column;gap:14px}
+  .dim-row{display:flex;align-items:center;gap:12px;font-size:13.5px}
+  .dim-name{flex:none;width:118px;color:var(--ink2)}
+  .dim-track{flex:1;height:6px;background:#f0ebe2;border-radius:6px;overflow:hidden}
+  .dim-fill{height:100%;border-radius:6px;width:0;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+  .dim-val{flex:none;width:42px;text-align:right;color:var(--ink3);font-variant-numeric:tabular-nums;font-size:12.5px}
+
+  /* short board */
+  .short{
+    background:#fdfaf5;border:1px dashed #ddd2c0;border-radius:12px;padding:20px 22px;
+  }
+  .short .tag{
+    display:inline-block;font-size:11.5px;color:#fff;background:var(--gold);
+    padding:2px 10px;border-radius:100px;margin-bottom:10px;letter-spacing:.05em;
+  }
+  .short p{font-size:14.5px;color:var(--ink2);margin:0}
+
+  .final{
+    text-align:center;padding:44px 34px;
+    background:linear-gradient(180deg,#fdfaf5,#fff);
+    border:1px solid var(--line);border-radius:18px;
+  }
+  .final .line{
+    font-family:"Songti SC","STSong","SimSun",serif;
+    font-size:20px;line-height:1.9;color:var(--ink);letter-spacing:.02em;
+  }
+  .final .line em{font-style:normal;color:var(--accent);font-weight:700}
+
+  .reset{
+    margin-top:26px;background:none;border:1px solid var(--line);color:var(--ink2);
+    padding:11px 30px;border-radius:100px;font-size:13.5px;cursor:pointer;
+    font-family:inherit;transition:all .2s;
+  }
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+
+  .foot{margin-top:40px;text-align:center;font-size:12px;color:var(--ink3);line-height:1.9}
+
+  @media(max-width:600px){
+    header{padding:44px 0 30px}
+    h1{font-size:27px}
+    .wrap{padding:0 16px 80px}
+    .q{padding:20px 18px}
+    .q-text{font-size:15px}
+    .res-top,.res-body{padding-left:22px;padding-right:22px}
+    .res-name{font-size:32px}
+    .dim-name{width:96px;font-size:12.5px}
+    .intro{padding:22px 20px}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="pbar">
+  <div class="pb-inner">
+    <div class="pb-track"><div class="pb-fill" id="pfill"></div></div>
+    <div class="pb-num" id="pnum">0 / 18</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header>
+    <div class="kicker">Decision Test</div>
+    <h1>要不要<span class="q">考研</span>？</h1>
+    <p class="sub">一份给站在岔路口的你的决策心理测试</p>
+    <div class="meta">
+      <span>18 道题</span>
+      <span>约 5 分钟</span>
+      <span>没有对错</span>
+    </div>
+  </header>
+
+  <div class="intro">
+    <h3>作答须知</h3>
+    <ol>
+      <li>凭第一反应选，不要挑"哪个答案更好看"。你骗得了这份测试，骗不了十二月的考场。</li>
+      <li>选项顺序只代表倾向强弱，不代表对错。A 不高级，D 也不丢人。</li>
+      <li>请按<strong>最近三个月的真实状态</strong>作答，不是你希望自己成为的样子。</li>
+      <li>如果觉得"两个都像"，选更<strong>经常发生</strong>的那个。</li>
+    </ol>
+  </div>
+
+  <div id="quiz"></div>
+
+  <div class="actions">
+    <button class="btn" id="submit" disabled>生成我的结果</button>
+    <p class="hint" id="hint">还有 18 题未作答</p>
+  </div>
+
+  <div id="result"></div>
+
+  <p class="foot">
+    本测试为职业生涯规划参考工具，不构成学业或职业决策的唯一依据。<br>
+    建议结合与师长、从业者的真实交流后再做决定。
+  </p>
+</div>
+
+<script>
+const DIMS = {
+  A:{name:'学术驱动力', max:12},
+  B:{name:'职业目标清晰度', max:15},
+  C:{name:'经济与时间抗压', max:12},
+  D:{name:'备考执行力', max:15}
+};
+
+const QS = [
+  {d:'A', t:'看到本专业某个还没搞明白的问题时，你的第一反应通常是？', o:[
+    ['想知道它到底为什么这样，甚至会自己去查资料',3],
+    ['有点兴趣，但更想快点知道"这东西有什么用"',2],
+    ['没什么感觉，考试能过就行',1],
+    ['看到就头大，能躲就躲',0]]},
+  {d:'A', t:'想象一下读研的日常：读文献、跑数据、被导师打回重写、反复改。你的感受是？', o:[
+    ['有点兴奋，这种"慢慢磨一个问题"的状态我吃得下',3],
+    ['能接受，虽然枯燥但觉得有意义',2],
+    ['想想就累，但为了那个文凭可以忍',1],
+    ['光是想象就觉得喘不上气',0]]},
+  {d:'A', t:'大学这几年，你有没有过"为了搞懂一件事，主动多花了很多时间"的经历？', o:[
+    ['有，不止一次，而且那种感觉挺爽的',3],
+    ['有过一两次，印象还挺深',2],
+    ['很少，基本是被作业和考试推着走',1],
+    ['基本没有，我更喜欢做完就结束',0]]},
+  {d:'A', t:'如果读研的研究方向和你想象的不一样，甚至很枯燥，你会？', o:[
+    ['先沉下心做，很多方向是做进去才有意思',3],
+    ['会难受，但会想办法调整或者换方向',2],
+    ['会后悔，可能就这么混到毕业',1],
+    ['大概率撑不下去',0]]},
+  {d:'B', t:'关于"我以后想做什么"，你现在的状态是？', o:[
+    ['很清楚，而且我知道那件事需要研究生学历',3],
+    ['比较清楚，读研有帮助，但不是非读不可',2],
+    ['只有模糊的方向，考研像是"多一个选择"',1],
+    ['完全没想过，一片空白',0]]},
+  {d:'B', t:'你想考的这个专业，和你未来想做的工作是什么关系？', o:[
+    ['就是那条路上必须有的一步',3],
+    ['大致相关，算是有帮助',2],
+    ['没仔细想过，先考上再说',1],
+    ['没什么关系，主要是想要个更高的学历',0]]},
+  {d:'B', t:'如果现在有一份还不错的工作 offer，但需要你放弃考研，你会？', o:[
+    ['还是考研，我要做的事需要这个学历',3],
+    ['会犹豫很久，可能先工作',2],
+    ['大概率去工作，考研本来就是备选',1],
+    ['立刻去工作，考研从来不是我的首选',0]]},
+  {d:'B', t:'你决定考研，最主要的原因是？', o:[
+    ['我确实想在这个领域再深入几年',3],
+    ['想提升学历，让以后的路宽一点',2],
+    ['身边人都在考，或者家里希望我考',1],
+    ['不想那么早工作，也不太知道自己能干什么',0]]},
+  {d:'B', t:'你了解过目标专业的真实读研生活吗（课程、毕业要求、师兄师姐的去向）？', o:[
+    ['了解过，问过人，也看过培养方案',3],
+    ['看过一些，大概知道',2],
+    ['只知道要考哪几门',1],
+    ['基本没了解过',0]]},
+  {d:'C', t:'读研这三年的学费和生活费，你家里的情况是？', o:[
+    ['完全能支持，不会影响家里',3],
+    ['能支持，但会紧一点',2],
+    ['有压力，需要我兼职或贷款',1],
+    ['压力很大，我不确定家里扛不扛得住',0]]},
+  {d:'C', t:'同龄人工作三年、开始有收入和存款，而你还在读书。你的感受是？', o:[
+    ['能接受，我知道我在换一个更长期的东西',3],
+    ['偶尔焦虑，但能消化',2],
+    ['会比较难受，怕被落下',1],
+    ['完全受不了，我需要尽快自己赚钱',0]]},
+  {d:'C', t:'如果这次没考上，需要二战一年（再花一年时间和钱），你？', o:[
+    ['可以接受，这个可能性我已经想过了',3],
+    ['会考虑，但要看家里的意思',2],
+    ['大概率不会二战，一年太久了',1],
+    ['绝对不能接受，我没有这个余量',0]]},
+  {d:'C', t:'对"读完研，工资可能也没比本科高多少"这件事，你的想法是？', o:[
+    ['想过，我读研本来也不是为了立刻多赚钱',3],
+    ['有点在意，但能接受',2],
+    ['会比较失落，那读它干嘛',1],
+    ['完全不能接受',0]]},
+  {d:'D', t:'过去一个月，你每天真正有效的学习时间大概是？', o:[
+    ['稳定 6 小时以上，基本没断过',3],
+    ['3–6 小时，偶尔断',2],
+    ['1–3 小时，经常断',1],
+    ['几乎没有，计划一直在重启',0]]},
+  {d:'D', t:'早上闹钟响了，你的真实反应是？', o:[
+    ['起来，洗漱，去自习室，已经形成习惯了',3],
+    ['赖十分钟，但还是会起',2],
+    ['经常一赖就是一上午',1],
+    ['干脆关掉，反正今天的计划已经乱了',0]]},
+  {d:'D', t:'你的复习计划通常能执行到什么程度？', o:[
+    ['有计划，而且真的能按周推进',3],
+    ['有计划，能完成六七成',2],
+    ['计划写得很好看，执行靠心情',1],
+    ['我一般不列计划',0]]},
+  {d:'D', t:'备考期间，手机、短视频、朋友约你，你的状态是？', o:[
+    ['能控制住，学习的时候基本不看',3],
+    ['会分心，但能拉回来',2],
+    ['经常一刷两小时，然后自责',1],
+    ['基本是"学十分钟，玩一小时"',0]]},
+  {d:'D', t:'距离考试还有三个月，你发现进度落后了一大截。你会？', o:[
+    ['立刻重排计划，砍掉次要的，先保重点',3],
+    ['会慌，但慌完还是继续按原计划走',2],
+    ['开始焦虑失眠，效率反而更低',1],
+    ['干脆放弃，"反正也来不及了"',0]]}
+];
+
+const TYPES = {
+  duxing:{
+    name:'笃行派', tag:'心里有岸，脚下有路',
+    feature:[
+      '你不是"想考研"，你是"要去读研"。方向、理由、执行力这三件事在你身上是连着的：你知道那个领域值得你多花三年，也知道这三年通向哪里，而且你已经在路上了——<strong>不是明天开始，是今天</strong>。',
+      '你身上有一种很稀缺的东西：<strong>你的努力是有指向的</strong>。很多人也在自习室坐到闭馆，但他们心里是空的；你不是。'
+    ],
+    quote:['"说不上多热爱，但我知道这事儿对我有意义。"','"别人问我为什么考，我能说出个一二三。"','"累是真的累，但我没想过放弃。"'],
+    advice:[
+      '<strong>按现在的节奏走，重点不是加速，是稳住。</strong>你最大的风险不是不够努力，而是被别人的进度扰乱节奏。',
+      '<strong>把"考不上怎么办"认真想一遍，写成 Plan B。</strong>这不是不吉利，是给自己卸压——有退路的人，反而走得更稳。',
+      '<strong>提前接触目标方向的真实样子</strong>（读一篇导师的论文、找学长聊一次）。你现在对"读研"的想象越具体，入学后的落差就越小。'
+    ],
+    final:'你不需要再证明自己该不该考，你需要的是<em>别在最后三个月把自己耗掉</em>。'
+  },
+  shenqian:{
+    name:'深潜派', tag:'真的喜欢，只是还没学会游泳',
+    feature:[
+      '你对这个领域是真的有兴趣，这不是装的。想到能在一个问题上钻三年，你心里是有一点跃跃欲试的。',
+      '但你身上有个明显的裂缝：<strong>想去的意愿，跑在了执行的能力前面。</strong>你可能每天都在计划，也每天都在推翻计划；书买了一堆，笔记开了好几个文档，真正推进的没多少。这不是懒——这通常是目标没拆到能落地的颗粒度，或者一个人学太久，已经失去外部节奏。'
+    ],
+    quote:['"我其实挺想读的，就是总进入不了状态。"','"计划表做得很漂亮，执行起来就散了。"','"看着别人一天学十小时，我一边焦虑一边刷手机。"'],
+    advice:[
+      '<strong>先补最短的那块板，别急着加时长。</strong>执行力弱就换环境——去自习室、找研友、每天打卡给别人看；把"今天学完一章"改成"上午九点到十点看完这 20 页"。经济有压力就去算账，把模糊的恐惧变成一张表。',
+      '<strong>给自己设一个 21 天的验证期。</strong>只做一件事：每天记录真实有效学习时长。数据会告诉你，你是"状态不好"，还是"其实不想"。区分这两者，比再刷一套题重要得多。',
+      '<strong>别用"我兴趣很强"来抵消"我没行动"。</strong>兴趣是入场券，不是通行证。'
+    ],
+    final:'喜欢一件事，和愿意为它吃三年苦，是两件事。<em>你现在站在中间，还来得及选。</em>'
+  },
+  shishui:{
+    name:'试水派', tag:'不是想上岸，是怕下水',
+    feature:[
+      '说句可能有点扎心的话：你考研，很大一部分原因不是"想读"，而是"还不想面对选择"。',
+      '这不是道德问题，这是<strong>绝大多数人在二十二三岁都会遇到的一次卡顿</strong>。校园要结束了，社会还没开始，前面是一片看不清的水。考研看起来像一块浮板——它有明确的书单、明确的考试日期、明确的"努力就有回报"的逻辑。而找工作没有这些。',
+      '所以你不是在逃避努力，你是在<strong>逃避不确定</strong>。区别很大。'
+    ],
+    quote:['"我也说不清为什么要考，就是觉得现在出去工作有点慌。"','"身边人都在考，我不考好像很奇怪。"','"让我现在说我想干什么，我真的说不出来。"'],
+    advice:[
+      '<strong>先做一次最小成本的职业探索，两周就够。</strong>去招聘网站抄下目标岗位的要求，看 20 条；找一个工作两年的人聊半小时；能实习就去实习一个月。你对真实世界每多了解一分，焦虑就少一分。',
+      '<strong>给"决定"设一个截止日期。</strong>不是"再想想"，是"某月某日之前我必须给自己一个答案"。没有期限的思考，会变成拖延。',
+      '<strong>把"我在逃避什么"写下来。</strong>左边写"如果考上了会怎样"，右边写"如果考不上要面对什么"。写完你会发现，右边那些东西没有你想的那么可怕。',
+      '<strong>如果你最后还是决定考，那就带着清醒去考。</strong>为缓冲而考研不丢人，但请至少给自己一个真实的理由。有理由的缓冲叫策略，没理由的缓冲叫消耗。'
+    ],
+    final:'你不是不够勇敢，你只是还没看清前面的路。<em>看不清的时候，先往前挪一步，别在原地消耗自己。</em>'
+  },
+  xianfei:{
+    name:'先飞派', tag:'你的答案在工位上，不在自习室',
+    feature:[
+      '你对"做研究"这件事没有太多兴趣，也不打算用三年时间去换一个学历标签。比起在教室里继续待着，你更想快点进入真实世界——有钱赚，有事做，有反馈。',
+      '这不是"不上进"，<strong>这只是你成长的路径不一样</strong>。',
+      '很多人被"学历越高越好"绑住了，但事实是：有些能力只能在真实的工作里长出来——判断力、跟人打交道、把事情从 0 推到 1。这些东西，图书馆给不了你。'
+    ],
+    quote:['"我一想到还要读三年书，就觉得人生被按了暂停键。"','"我更想知道自己到底能干什么，而不是再考一次试。"','"我坐不住，但我做事挺靠谱的。"'],
+    advice:[
+      '<strong>先工作，认真工作两年。</strong>两年后你对行业、岗位和自己的认识会完全不同。那时如果你还想读，你的读研会目的性极强——你知道要跟谁、学什么、拿它做什么。带着问题去读书，比带着迷茫去读书，效率差十倍。',
+      '<strong>把"学历焦虑"换成"能力清单"。</strong>写下目标岗位需要的三项硬技能，用半年真的练出来。这比一个文凭更能让你有底气。',
+      '<strong>保留回来的门。</strong>非全日制、专硕、海外一年制，路一直在。考研不是一次性机会，它只是其中一条路。',
+      '<strong>别被"以后会后悔"吓住。</strong>真正的后悔从来不是"当年没考研"，而是"当年没搞清楚自己要什么，就跟别人走了"。'
+    ],
+    final:'你不是不适合读书，你只是现在更需要去生活。<em>先飞的人，也回得来。</em>'
+  }
+};
+
+const SHORT = {
+  A:{tag:'A · 学术驱动力偏低', txt:'你可能会读得很痛苦。不是因为难，是因为"不感兴趣"这件事会在第二年集中爆发。如果你还是要考，请务必选一个<strong>你真能坐得住</strong>的方向，而不是"好考"的方向。'},
+  B:{tag:'B · 职业目标清晰度偏低', txt:'这是最需要警惕的一项。<strong>"不知道为什么考"的人，往往也"不知道考上了要干什么"。</strong>请在报名前至少搞清楚一件事：这个学历，会把你送进哪个具体的岗位？'},
+  C:{tag:'C · 经济与时间抗压偏低', txt:'不要硬扛。把账算清楚：三年总花费多少、家里能出多少、缺口怎么补（奖学金 / 助研 / 兼职 / 贷款）。<strong>钱的问题一旦有方案，就不再是心理问题。</strong>'},
+  D:{tag:'D · 备考执行力偏低', txt:'你和目标之间隔的不是决心，是方法。<strong>别用"再努力一点"来解决"方法不对"的问题。</strong>换环境、找人监督、把任务拆小——先让"每天真的学了"发生，再谈效率。'}
+};
+
+// render
+const quizEl = document.getElementById('quiz');
+let html = '';
+QS.forEach((q, i) => {
+  html += '<div class="q" id="q' + i + '">';
+  html += '<div class="q-head"><div class="q-no">' + (i+1) + '</div><div class="q-text">' + q.t + '</div></div>';
+  html += '<div class="opts">';
+  q.o.forEach((op, j) => {
+    const L = 'ABCD'[j];
+    html += '<label class="opt"><input type="radio" name="q' + i + '" value="' + op[1] + '">'
+         + '<span class="dot"></span><span class="letter">' + L + '</span>'
+         + '<span class="txt">' + op[0] + '</span></label>';
+  });
+  html += '</div></div>';
+});
+quizEl.innerHTML = html;
+
+const submitBtn = document.getElementById('submit');
+const hint = document.getElementById('hint');
+const pbar = document.getElementById('pbar');
+const pfill = document.getElementById('pfill');
+const pnum = document.getElementById('pnum');
+const resultEl = document.getElementById('result');
+let answers = new Array(QS.length).fill(null);
+
+quizEl.addEventListener('change', e => {
+  if (!e.target.name) return;
+  const i = +e.target.name.slice(1);
+  answers[i] = +e.target.value;
+  document.getElementById('q' + i).classList.add('done');
+  updateProgress();
+});
+
+function updateProgress(){
+  const n = answers.filter(a => a !== null).length;
+  pbar.classList.add('on');
+  pfill.style.width = (n / QS.length * 100) + '%';
+  pnum.textContent = n + ' / ' + QS.length;
+  submitBtn.disabled = n < QS.length;
+  hint.textContent = n < QS.length ? ('还有 ' + (QS.length - n) + ' 题未作答') : '全部完成，可以看结果了';
+}
+
+submitBtn.addEventListener('click', () => {
+  const d = {A:0, B:0, C:0, D:0};
+  QS.forEach((q, i) => { d[q.d] += answers[i]; });
+  const total = d.A + d.B + d.C + d.D;
+
+  let key;
+  if (d.A <= 6 && d.B <= 9) key = 'xianfei';
+  else if (total >= 44) key = 'duxing';
+  else if (total >= 33) key = 'shenqian';
+  else if (total >= 22) key = 'shishui';
+  else key = 'xianfei';
+
+  const t = TYPES[key];
+
+  // lowest dim by percentage
+  const pct = {};
+  Object.keys(DIMS).forEach(k => pct[k] = d[k] / DIMS[k].max);
+  let low = 'A';
+  Object.keys(pct).forEach(k => { if (pct[k] < pct[low]) low = k; });
+  const lowPct = pct[low];
+
+  let r = '';
+  r += '<div class="res-card"><div class="res-top">';
+  r += '<div class="res-label">你的结果类型</div>';
+  r += '<div class="res-name">' + t.name + '</div>';
+  r += '<div class="res-tag">' + t.tag + '</div>';
+  r += '<div class="res-score">总分 <b>' + total + '</b> / 54</div>';
+  r += '</div><div class="res-body">';
+
+  r += '<div class="blk"><div class="blk-h">核心特征</div>';
+  t.feature.forEach(p => r += '<p>' + p + '</p>');
+  r += '</div>';
+
+  r += '<div class="blk"><div class="blk-h">你可能会在这些句子里看到自己</div><div class="quote">';
+  t.quote.forEach(q => r += '<span>' + q + '</span>');
+  r += '</div></div>';
+
+  r += '<div class="blk"><div class="blk-h">维度画像</div><div class="dims">';
+  Object.keys(DIMS).forEach(k => {
+    const p = Math.round(pct[k] * 100);
+    let col = '#b5522f';
+    if (p >= 70) col = '#3c6b5c';
+    else if (p < 40) col = '#a8823c';
+    r += '<div class="dim-row"><div class="dim-name">' + DIMS[k].name + '</div>'
+       + '<div class="dim-track"><div class="dim-fill" style="background:' + col + '" data-w="' + p + '"></div></div>'
+       + '<div class="dim-val">' + d[k] + '/' + DIMS[k].max + '</div></div>';
+  });
+  r += '</div></div>';
+
+  r += '<div class="blk"><div class="blk-h">建议方向</div><ul class="advice">';
+  t.advice.forEach(a => r += '<li>' + a + '</li>');
+  r += '</ul></div>';
+
+  if (lowPct < 0.6) {
+    r += '<div class="blk"><div class="blk-h">你的短板提示</div><div class="short">'
+       + '<div class="tag">' + SHORT[low].tag + '</div><p>' + SHORT[low].txt + '</p></div></div>';
+  }
+
+  r += '</div></div>';
+
+  r += '<div class="final"><div class="line">' + t.final + '</div>'
+     + '<button class="reset" onclick="location.reload()">重新测一次</button></div>';
+
+  resultEl.innerHTML = r;
+  resultEl.style.display = 'block';
+
+  submitBtn.style.display = 'none';
+  hint.style.display = 'none';
+  document.querySelector('.intro').style.display = 'none';
+  quizEl.style.display = 'none';
+
+  window.scrollTo({top: 0, behavior: 'smooth'});
+
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      document.querySelectorAll('.dim-fill').forEach(el => {
+        el.style.width = el.dataset.w + '%';
+      });
+    }, 120);
+  });
+});
+</script>
+</body>
+</html>
